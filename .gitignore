@@ -1,0 +1,6 @@
+/.idea
+target/
+build/
+*.xml
+!pom.xml
+*.iml
