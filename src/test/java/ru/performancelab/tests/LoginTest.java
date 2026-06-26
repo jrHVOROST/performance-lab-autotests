@@ -10,7 +10,6 @@ public class LoginTest extends BaseTest {
 
     @Test
     void successfulLoginTest() {
-        LoginPage loginPage = new LoginPage(driver);
         loginPage.login("standard_user", "secret_sauce");
 
         assertThat(driver.getCurrentUrl())
@@ -25,7 +24,6 @@ public class LoginTest extends BaseTest {
 
     @Test
     void failedLoginTest() {
-        LoginPage loginPage = new LoginPage(driver);
         loginPage.login("standard_user", "wrong_password");
 
         String errorText = loginPage.getErrorMessage();
@@ -36,7 +34,6 @@ public class LoginTest extends BaseTest {
 
     @Test
     void emptyCredentialsTest() {
-        LoginPage loginPage = new LoginPage(driver);
         loginPage.login("", "");
 
         String errorText = loginPage.getErrorMessage();
@@ -47,7 +44,6 @@ public class LoginTest extends BaseTest {
 
     @Test
     void emptyPasswordTest() {
-        LoginPage loginPage = new LoginPage(driver);
         loginPage.login("standard_user", "");
 
         String errorText = loginPage.getErrorMessage();
@@ -58,7 +54,6 @@ public class LoginTest extends BaseTest {
 
     @Test
     void lockedOutUserTest() {
-        LoginPage loginPage = new LoginPage(driver);
         loginPage.login("locked_out_user", "secret_sauce");
 
         String errorText = loginPage.getErrorMessage();
