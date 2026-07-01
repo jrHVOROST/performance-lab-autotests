@@ -2,8 +2,12 @@ package ru.performancelab.tests;
 
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
-import ru.performancelab.pages.LoginPage;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import java.util.stream.Stream;
 
+import ru.performancelab.pages.LoginPage;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class LoginTest extends BaseTest {
@@ -22,43 +26,23 @@ public class LoginTest extends BaseTest {
                 .isTrue();
     }
 
-    @Test
-    void failedLoginTest() {
-        loginPage.login("standard_user", "wrong_password");
-
-        String errorText = loginPage.getErrorMessage();
-        assertThat(errorText)
-                .as("Error message should indicate invalid credentials")
-                .contains("Epic sadface: Username and password do not match any user in this service");
+    static Stream<Arguments> incorrectLoginData() {
+        return Stream.of(
+                Arguments.of("standard_user", "wrong_password", "Epic sadface: Username and password do not match any user in this service"),
+                Arguments.of("", "", "Epic sadface: Username is required"),
+                Arguments.of("standard_user", "", "Epic sadface: Password is required"),
+                Arguments.of("locked_out_user", "secret_sauce", "Epic sadface: Sorry, this user has been locked out.")
+        );
     }
 
-    @Test
-    void emptyCredentialsTest() {
-        loginPage.login("", "");
+    @ParameterizedTest(name = "Login with {0} and {1} should fail with {2}")
+    @MethodSource("incorrectLoginData")
+    void checkIncorrectLogin(String username, String password, String errorMessage) {
+        loginPage.login(username, password);
 
         String errorText = loginPage.getErrorMessage();
         assertThat(errorText)
-                .as("Error message should indicate username is required")
-                .contains("Epic sadface: Username is required");
-    }
-
-    @Test
-    void emptyPasswordTest() {
-        loginPage.login("standard_user", "");
-
-        String errorText = loginPage.getErrorMessage();
-        assertThat(errorText)
-                .as("Error message should indicate password is required")
-                .contains("Epic sadface: Password is required");
-    }
-
-    @Test
-    void lockedOutUserTest() {
-        loginPage.login("locked_out_user", "secret_sauce");
-
-        String errorText = loginPage.getErrorMessage();
-        assertThat(errorText)
-                .as("Error message should indicate user is locked out")
-                .contains("Epic sadface: Sorry, this user has been locked out.");
+                .as("Error message should be correct")
+                .contains(errorMessage);
     }
 }
