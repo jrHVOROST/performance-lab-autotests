@@ -11,7 +11,6 @@ public class ProductsPage extends BasePage {
     }
 
     public void addProductToCart(String productName) {
-        // e.g. "Sauce Labs Backpack" -> sauce-labs-backpack
         String formattedName = productName.toLowerCase().replace(" ", "-");
         By addToCartButton = By.cssSelector("[data-test='add-to-cart-" + formattedName + "']");
         driver.findElement(addToCartButton).click();

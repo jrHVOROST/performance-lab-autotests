@@ -10,8 +10,6 @@ public class ProductsTest extends BaseTest {
     @Test
     void checkGoodsAdded() {
         loginPage.login("standard_user", "secret_sauce");
-
-        ProductsPage productsPage = new ProductsPage(driver);
         
         productsPage.addProductToCart("Sauce Labs Backpack");
         productsPage.addProductToCart("Sauce Labs Bike Light");
