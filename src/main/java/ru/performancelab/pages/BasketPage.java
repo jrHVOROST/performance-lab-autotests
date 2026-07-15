@@ -14,19 +14,8 @@ public class BasketPage extends BasePage {
     }
 
     public CheckoutPage clickCheckout() {
-        for (int i = 0; i < 3; i++) {
-            try {
-                wait.until(ExpectedConditions.elementToBeClickable(checkoutButton)).click();
-                wait.until(ExpectedConditions.urlContains("checkout-step-one.html"));
-                return new CheckoutPage(driver);
-            } catch (TimeoutException e) {
-                if (i == 2) throw e;
-                System.out.println("Checkout click failed to navigate, retrying...");
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ie) {}
-            }
-        }
+        wait.until(ExpectedConditions.elementToBeClickable(checkoutButton)).click();
+        wait.until(ExpectedConditions.urlContains("checkout-step-one.html"));
         return new CheckoutPage(driver);
     }
 

@@ -29,11 +29,13 @@ public class BaseTest {
         if (browser.equalsIgnoreCase("firefox")) {
             org.openqa.selenium.firefox.FirefoxOptions firefoxOptions = new org.openqa.selenium.firefox.FirefoxOptions();
             firefoxOptions.addArguments("-headless");
+            firefoxOptions.addArguments("--window-size=1920,1080");
             driver = new org.openqa.selenium.firefox.FirefoxDriver(firefoxOptions);
         } else {
             ChromeOptions options = new ChromeOptions();
             options.addArguments("--remote-allow-origins=*");
             options.addArguments("--headless=new");
+            options.addArguments("--window-size=1920,1080");
             driver = new ChromeDriver(options);
         }
         

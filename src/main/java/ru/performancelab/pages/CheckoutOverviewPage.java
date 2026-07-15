@@ -15,28 +15,9 @@ public class CheckoutOverviewPage extends BasePage {
     }
 
     public CheckoutCompletePage clickFinish() {
-        for (int i = 0; i < 3; i++) {
-            try {
-                WebElement btn = wait.until(ExpectedConditions.elementToBeClickable(finishButton));
-                btn.click();
-                wait.until(ExpectedConditions.urlContains("checkout-complete.html"));
-                return new CheckoutCompletePage(driver);
-            } catch (TimeoutException e) {
-                if (i == 2) throw e;
-                System.out.println("Finish click failed to navigate, retrying with JS...");
-                try {
-                    WebElement btn = driver.findElement(finishButton);
-                    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", btn);
-                    wait.until(ExpectedConditions.urlContains("checkout-complete.html"));
-                    return new CheckoutCompletePage(driver);
-                } catch (Exception ex) {
-                    System.out.println("JS click also failed...");
-                }
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ie) {}
-            }
-        }
+        WebElement btn = wait.until(ExpectedConditions.presenceOfElementLocated(finishButton));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true); arguments[0].click();", btn);
+        wait.until(ExpectedConditions.urlContains("checkout-complete.html"));
         return new CheckoutCompletePage(driver);
     }
 }
