@@ -15,7 +15,8 @@ public class ProductsPage extends BasePage {
     public ProductsPage addProductToCart(String productName) {
         String formattedName = productName.toLowerCase().replace(" ", "-");
         By addToCartButton = By.cssSelector("[data-test='add-to-cart-" + formattedName + "']");
-        wait.until(ExpectedConditions.elementToBeClickable(addToCartButton)).click();
+        org.openqa.selenium.WebElement btn = wait.until(ExpectedConditions.presenceOfElementLocated(addToCartButton));
+        ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true); arguments[0].click();", btn);
         // Wait for the cart badge to show up, meaning the item is actually in the cart
         wait.until(ExpectedConditions.visibilityOfElementLocated(cartBadge));
         return this;
@@ -26,7 +27,8 @@ public class ProductsPage extends BasePage {
     }
     
     public BasketPage goToBasket() {
-        wait.until(ExpectedConditions.elementToBeClickable(cartIcon)).click();
+        org.openqa.selenium.WebElement btn = wait.until(ExpectedConditions.presenceOfElementLocated(cartIcon));
+        ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true); arguments[0].click();", btn);
         wait.until(ExpectedConditions.urlContains("cart.html"));
         return new BasketPage(driver);
     }

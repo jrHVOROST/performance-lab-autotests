@@ -28,10 +28,10 @@ public class CheckoutPage extends BasePage {
     private void fillInput(By locator, String value) {
         if (value != null) {
             WebElement element = wait.until(ExpectedConditions.elementToBeClickable(locator));
-            if (!element.getAttribute("value").isEmpty()) {
-                element.sendKeys(org.openqa.selenium.Keys.chord(org.openqa.selenium.Keys.CONTROL, "a"), org.openqa.selenium.Keys.BACK_SPACE);
+            element.sendKeys(org.openqa.selenium.Keys.chord(org.openqa.selenium.Keys.CONTROL, "a"), org.openqa.selenium.Keys.BACK_SPACE);
+            if (!value.isEmpty()) {
+                element.sendKeys(value);
             }
-            element.sendKeys(value);
         }
     }
 

@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebElement;
 
 public class BasketPage extends BasePage {
     private final By checkoutButton = By.cssSelector("[data-test='checkout']");
@@ -14,7 +15,8 @@ public class BasketPage extends BasePage {
     }
 
     public CheckoutPage clickCheckout() {
-        wait.until(ExpectedConditions.elementToBeClickable(checkoutButton)).click();
+        WebElement btn = wait.until(ExpectedConditions.presenceOfElementLocated(checkoutButton));
+        ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true); arguments[0].click();", btn);
         wait.until(ExpectedConditions.urlContains("checkout-step-one.html"));
         return new CheckoutPage(driver);
     }
