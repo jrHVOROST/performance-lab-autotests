@@ -7,6 +7,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import java.util.stream.Stream;
 
+import ru.performancelab.models.User;
+import ru.performancelab.models.UserFactory;
 import ru.performancelab.pages.LoginPage;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -14,7 +16,7 @@ public class LoginTest extends BaseTest {
 
     @Test
     void successfulLoginTest() {
-        loginPage.login("standard_user", "secret_sauce");
+        loginPage.open().login(UserFactory.getStandardUser());
 
         assertThat(driver.getCurrentUrl())
                 .as("URL should contain /inventory.html after successful login")
@@ -28,17 +30,17 @@ public class LoginTest extends BaseTest {
 
     static Stream<Arguments> incorrectLoginData() {
         return Stream.of(
-                Arguments.of("standard_user", "wrong_password", "Epic sadface: Username and password do not match any user in this service"),
-                Arguments.of("", "", "Epic sadface: Username is required"),
-                Arguments.of("standard_user", "", "Epic sadface: Password is required"),
-                Arguments.of("locked_out_user", "secret_sauce", "Epic sadface: Sorry, this user has been locked out.")
+                Arguments.of(UserFactory.getInvalidPasswordUser(), "Epic sadface: Username and password do not match any user in this service"),
+                Arguments.of(UserFactory.getEmptyCredentialsUser(), "Epic sadface: Username is required"),
+                Arguments.of(UserFactory.getEmptyPasswordUser(), "Epic sadface: Password is required"),
+                Arguments.of(UserFactory.getLockedOutUser(), "Epic sadface: Sorry, this user has been locked out.")
         );
     }
 
-    @ParameterizedTest(name = "Login with {0} and {1} should fail with {2}")
+    @ParameterizedTest(name = "Login with invalid user should fail with {1}")
     @MethodSource("incorrectLoginData")
-    void checkIncorrectLogin(String username, String password, String errorMessage) {
-        loginPage.login(username, password);
+    void checkIncorrectLogin(User user, String errorMessage) {
+        loginPage.open().loginInvalid(user);
 
         String errorText = loginPage.getErrorMessage();
         assertThat(errorText)

@@ -2,6 +2,8 @@ package ru.performancelab.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import ru.performancelab.models.User;
+import ru.performancelab.utils.PropertyReader;
 
 public class LoginPage extends BasePage {
     private final By usernameInput = By.cssSelector("[data-test='username']");
@@ -13,22 +15,41 @@ public class LoginPage extends BasePage {
         super(driver);
     }
 
-    public void enterUsername(String username) {
-        driver.findElement(usernameInput).sendKeys(username);
+    public LoginPage open() {
+        driver.get(PropertyReader.getProperty("saucedemo.url"));
+        return this;
     }
 
-    public void enterPassword(String password) {
-        driver.findElement(passwordInput).sendKeys(password);
+    public LoginPage enterUsername(String username) {
+        if (username != null && !username.isEmpty()) {
+            driver.findElement(usernameInput).sendKeys(username);
+        }
+        return this;
+    }
+
+    public LoginPage enterPassword(String password) {
+        if (password != null && !password.isEmpty()) {
+            driver.findElement(passwordInput).sendKeys(password);
+        }
+        return this;
     }
 
     public void clickLogin() {
         driver.findElement(loginButton).click();
     }
 
-    public void login(String username, String password) {
-        enterUsername(username);
-        enterPassword(password);
+    public ProductsPage login(User user) {
+        enterUsername(user.getUsername());
+        enterPassword(user.getPassword());
         clickLogin();
+        return new ProductsPage(driver);
+    }
+    
+    public LoginPage loginInvalid(User user) {
+        enterUsername(user.getUsername());
+        enterPassword(user.getPassword());
+        clickLogin();
+        return this;
     }
 
     public String getErrorMessage() {

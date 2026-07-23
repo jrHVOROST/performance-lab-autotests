@@ -20,13 +20,27 @@ public class BaseTest {
     @BeforeAll
     static void setupClass() {
         WebDriverManager.chromedriver().setup();
+        WebDriverManager.firefoxdriver().setup();
     }
 
     @BeforeEach
     void setUp() {
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--remote-allow-origins=*");
-        driver = new ChromeDriver(options);
+        String browser = System.getProperty("browser", "chrome");
+        if (browser.equalsIgnoreCase("firefox")) {
+            org.openqa.selenium.firefox.FirefoxOptions firefoxOptions = new org.openqa.selenium.firefox.FirefoxOptions();
+            firefoxOptions.addArguments("-headless");
+            firefoxOptions.addArguments("--window-size=1920,1080");
+            driver = new org.openqa.selenium.firefox.FirefoxDriver(firefoxOptions);
+        } else {
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("--remote-allow-origins=*");
+            options.addArguments("--headless=new");
+            options.addArguments("--window-size=1920,1080");
+            driver = new ChromeDriver(options);
+        }
+        
+        System.out.println("Running test in thread: " + Thread.currentThread().getId() + " on " + browser);
+        
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         driver.get("https://saucedemo.com");
